@@ -1,0 +1,269 @@
+* Part 0 | Fundamentals of Web Apps 
+
+** Fundamentals of Web Apps 
+
+*** HTTP GET 
+
+The server and web browser communicate with each other using the HTTP protocol. The network tab shows how the browser and server communicate. 
+
+*** Traditional Web Applications 
+
+#+BEGIN_SRC js
+const getFrontPageHtml = (noteCount) => {
+    return()
+}
+#+END_SRC
+
+
+
+#+BEGIN_SRC javascript
+const getFrontPageHtml = (noteCount) => {
+    return(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+      </head>
+      <body>
+        <div class='container'>
+          <h1>Full stack example app</h1>
+          <p>Number of notes created ${noteCount}</p>
+          <a href='/notes'>notes</a>
+          <img src='kuva.png' width='200' />
+        </div>
+      </body>
+    </html>
+    `)}
+
+app.get('/', (req, res) => {
+    const page = getFrontPageHtml(notes.length)
+    res.send(page)
+})
+#+END_SRC
+
+The example above saves the content of the HTML page as a string with a dynamic variable in the middle of it (noteCount). The current number of notes in the code notes.length replaces the noteCount
+
+*** Running Application Logic on the Browser 
+
+When we compare the page in the browser and the code returned by the server, we notice that there is no notes. This can be found by clicking the script main.js in the console, which returns the following code:
+
+#+BEGIN_SRC javascript
+var xhttp = new XMLHttpRequest()
+
+// create event handler for event onreadystatechange for the xhttp object
+xhttp.onreadystatechange = function() {
+    // when operation is complete and the http response is 200 
+    if (this.readyState == 4 && this.status == 200) {
+        // parse json data
+        const data = JSON.parse(this.responseText)
+        // log the data in the console
+        console.log(data)
+
+        // create unordered list of class notes
+        var ul = document.createElement('ul')
+        ul.setAttribute('class', 'notes')
+
+        // create a list item for each note
+        data.forEach(function(note) {
+            var li = document.createElement('li')
+            ul.appendChild(li);
+            li.appendChild(document.createTextNode(note.content))
+        })
+
+        document.getElementById("notes").appendChild(ul)
+    }
+}
+
+// do an HTTP GET request to the server's address /data.json
+xhttp.open("GET", "/data.json", true)
+xhttp.send()
+#+END_SRC
+
+Event handlers are common in javascript. They are called callback functions. 
+
+*** Document Object Model or DOM 
+
+We can think of HTML pages as implicit tree structures. Document Object Model, or DOM, is an API which enables programmatic modification of the element trees corresponding to web pages.  
+
+*** Manipulating the Document-Object from the Console
+
+The topmost node of the DOM tree of a HTML document is called the document object. 
+
+You can access the document object by typing document in the console tab. 
+
+*** CSS 
+
+The head element of the HTML code of the Notes page contains a link tag, which determines that the browser must fetch a CSS style sheet from the address main.css 
+
+CSS is a markup language used to determine the appearance of web pages.
+
+#+BEGIN_SRC css
+.container {
+    padding: 10px;
+    border: 1px solid;
+}
+
+.notes {
+    color: blue;
+}
+#+END_SRC
+
+The file defines two class selectors. These are used to select certain parts of the page and to define styling rules to style them. 
+
+*** Loading a page containing javascript - revised 
+
+1. The browser fetches the HTML code defining the content and the structure of the page from the server using an HTTP GET request
+2. Links in the HTML code cause the browser to also fetch the CSS style sheet main.css
+3. and a javascript code file main.js
+4. The browser executes the javascript code. The code makes an HTTP GET request to the address "/data.json", which returns the notes as JSON data
+5. When the data has been fetched, the browser executes an event handler, which renders the notes to the page using the DOM-API
+
+*** Forms and HTTP POST 
+
+When the button on the form is clicked, the browser will send the user input to the server. This causes altogether 5 http requests. The first one is the form submit event. 
+
+It is an HTTP POST request to the server address new_note. The server responds with HTTP status code 302 -- a URL redirect, with which the server asks the browser to do a new HTTP GET request to the address defined in the header's location - the address notes. 
+
+So, the browser reloads the Notes page. This causes 3 more HTTP requests: fetching the style sheet, the js code, and the raw data of the notes. 
+
+The Form tag has attributes action and method, which define that submitting the form is done as an HTTP POST request to the address new_note. 
+
+The code on the server responsible for the POST request is simple: 
+
+#+BEGIN_SRC javascript
+app.post('/new_note', (req, res) => {
+    //  create a new note object and add it to an array called notes
+    notes.push({
+        // content of the note
+        content: req.body.note,
+        // date the note was created
+        date: new Date(),
+    })
+
+    return res.redirect('/notes')
+})
+#+END_SRC
+
+*** AJAX 
+
+AJAX stands for Asynchronous Javascript and XML
+
+*** Single Page App
+
+In the example app, the home page works like a traditional web page: all of the logic is on the server, and the browser only renders the HTML as instructed. 
+
+In recent years, the Single Page Application style of creating web apps has emerged. SPAs don't fetch all of their pages separately from the server like the sample app, but instead comprise only one HTML page fetched from the server, the contents of which are manipulated with JavaScript that executes in the browser. 
+
+The SPA version of the app doesn't send the form data in the traditional way, but instead uses the JavaScript code it fetched from the server. 
+
+#+BEGIN_SRC javascript
+// fetch the form element from the page
+var form = document.getElementById('notes_form')
+// register an event handler to handle form submit
+form.onsubmit = function(e) {
+    // prevent default handling of form submit
+    e.preventDefault()
+
+    // make a new note
+    var note = {
+        content: e.target.elements[0].value,
+        date: new Date(),
+    }
+    // add it to the notes list
+    notes.push(note)
+    e.target.elements[0].value = ''
+    // rerender the notes list on the page
+    redrawNotes()
+    // send the new note to the server
+    sendToServer(note)
+}
+
+// code for sending the note to the server
+var sendToServer = function(note) {
+    var xhttpForPost = new XMLHttpRequest()
+    // ...
+
+    xhttpForPost.open('POST', '/new_note_spa', true)
+    xhttpForPost.setRequestHeader('Content-type', 'application/json')
+    xhttpForPost.send(JSON.stringify(note))
+}
+#+END_SRC
+
+** Exercises
+
+*** 0.1: HTML
+
+Review the basics of HTML by reading this tutorial from Mozilla: 
+https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML_basics
+
+#+BEGIN_SRC html
+<!-- attributes -->
+<p class="editor-note">My cat is very grumpy</p>
+
+<!-- nesting elements -->
+<p>My cat is <strong>very</strong> grumpy.</p>
+
+<!-- empty elements -->
+<img src="images/firefox-icon.png" alt="My test image">
+#+END_SRC
+
+*Anatomy of an HTML document*
+
+#+BEGIN_SRC html :tangle index.html
+<!-- needed to make sure the document behaves correctly -->
+<!DOCTYPE html>
+<!-- wraps all the content on the page -->
+<html>
+  <!-- acts as a container for all the stuff included that isn't the page content -->
+  <head>
+    <!-- character set for the document -->
+    <meta charset="utf-8">
+    <!-- sets the title of the page -->
+    <title>My test page</title>
+  </head>
+  <!-- contains all the content -->
+  <body>
+    <img src="images/firefox-icon.png" alt="My test image">
+  </body>
+</html>
+#+END_SRC
+
+Other stuff: 
+
+#+BEGIN_SRC html
+<!-- headers -->
+<h1>Hello, world!</h1>
+<h2>Hello, world!</h2>
+<h3>Hello, world!</h3>
+<h4>Hello, world!</h4>
+<h5>Hello, world!</h5>
+<h6>Hello, world!</h6>
+
+<!-- lists -->
+<ul>
+  <li>list item 1</li>
+  <li>list item 2</li>
+  <li>list item 3</li>
+</ul>
+
+<!-- links -->
+<a href="https://www.mozilla.org/en-US/about/manifesto/">Mozilla Manifesto</a>
+#+END_SRC
+
+*** 0.2: CSS 
+
+Review the basics of CSS by reading this tutorial from Mozilla: 
+https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/CSS_basics
+
+CSS is a style sheet language
+
+#+BEGIN_SRC css :tangle style.css
+p {
+    color: red;
+}
+#+END_SRC
+
+#+BEGIN_SRC css :tangle style.css
+p {
+    color: green;
+}
+#+END_SRC
