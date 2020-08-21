@@ -208,7 +208,7 @@ https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML
 
 *Anatomy of an HTML document*
 
-#+BEGIN_SRC html :tangle index.html
+#+BEGIN_SRC html
 <!-- needed to make sure the document behaves correctly -->
 <!DOCTYPE html>
 <!-- wraps all the content on the page -->
@@ -256,14 +256,333 @@ https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/CSS_
 
 CSS is a style sheet language
 
-#+BEGIN_SRC css :tangle style.css
+#+BEGIN_SRC css
 p {
     color: red;
 }
 #+END_SRC
 
-#+BEGIN_SRC css :tangle style.css
+#+BEGIN_SRC css
 p {
     color: green;
 }
 #+END_SRC
+
+
+The whole structure above is called a ruleset. It consists of the following individual parts: 
+
+- Selector: this is the html name at the beginning of the ruleset, i.e. p
+- Declaration: this is a single rule, like color: red
+- Properties: These are the ways in which you can style an element, i.e. color is a property of the p tag
+- Property Value: To the right of the property, is the value 
+
+#+BEGIN_SRC css
+/* modify multiple property values with one ruleset */
+p {
+    color: red;
+    width: 500px;
+    border: 1px solid black;
+}
+
+/* select multiple elements and apply a single ruleset to all of them */
+p, li, h1 {
+    color: blue;
+}
+#+END_SRC
+
+| Selector Name | What it selects           | Example                                 |
+|---------------+---------------------------+-----------------------------------------|
+| Element       | All HTML elements         | <p>                                     |
+| ID            | Element with ID           | #my-id -> <p id="my-id">                |
+| Class         | Elements with Class       | .my-class -> <p class="my-class">       |
+| Attribute     | Elements with Attribute   | img[src] -> <img src="..."> not <img>   |
+| Pseudo-class  | Element in specific state | a:hover -> <a> only when mouse hovering |
+
+*Fonts and Text*
+
+#+BEGIN_SRC css :tangle style.css
+/* replace font with open sans in page */
+html {
+    font-size: 10px;
+    font-family: "Open Sans", sans-serif;
+}
+
+/* set sizes for elements inside the html body */
+h1 {
+    font-size: 60px;
+    text-align: center;
+}
+
+p, li {
+    font-size: 16px;
+    line-height: 2;
+    letter-spacing: 1px;
+}
+#+END_SRC
+
+*CSS: All About Boxes*
+
+#+BEGIN_SRC css :tangle style.css
+/* change page color */
+html {
+    background-color: #00539F;
+}
+
+/* style the page body */
+body {
+    width: 600px;
+    margin: 0 auto;
+    background-color: #FF9500;
+    padding: 0 20px 20px 20px;
+    border: 5px solid black;
+}
+
+/* position and style the main page title */
+h1 {
+    margin: 0;
+    padding: 20px 0;
+    color: #00539F;
+    text-shadow: 3px 3px 1px black; /* horizontal offset, vertical offset, blur radius, base color */
+}
+
+/* center the image  */
+img {
+    display: block;
+    margin: 0 auto;
+}
+#+END_SRC
+
+*** 0.3: HTML Forms
+
+Web forms are one of the main points of interaction between a user and a web site or application. 
+
+#+BEGIN_SRC html
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>My test page</title>
+  </head>
+  <body>
+    <p>This is my page</p>
+  </body>
+</html>
+#+END_SRC
+
+All forms start with a form element: 
+
+#+BEGIN_SRC html
+<form action="/my-handling-form-page" method="post"> </form>
+#+END_SRC
+
+- The action attribute defines the location (URL) where the form's collected data should be sent when it is submitted
+- The method attribute defines which HTTP method to send the data with (usually get or post)
+
+#+BEGIN_SRC html
+<!-- rough widget -->
+<form action="/my-handling-form-page" method="post">
+  <ul>
+    <li>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="user_name">
+    </li>
+    <li>
+      <label for="mail">E-mail:</label>
+      <input type="email" id="mail" name="user_email">
+    </li>
+    <li>
+      <label for="msg">Message:</label>
+      <textarea id="msg" name="user_message"></textarea>
+    </li>
+  </ul>
+</form>
+#+END_SRC
+
+
+#+BEGIN_SRC html
+<!-- If we wish to define default values -->
+<input type="text" value="By default this element is filled with this text">
+
+<textarea>
+  By default this element is filled with this text
+</textarea>
+
+<!-- add button -->
+<li class="button">
+  <button type="submit">Send your message</button>
+</li>
+#+END_SRC
+
+#+BEGIN_SRC html :tangle simple.html
+<!-- less rough widget -->
+<form action="/my-handling-form-page" method="post">
+  <ul>
+    <li>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="user_name">
+    </li>
+    <li>
+      <label for="mail">E-mail:</label>
+      <input type="email" id="mail" name="user_email">
+    </li>
+    <li>
+      <label for="msg">Message:</label>
+      <textarea id="msg" name="user_message"></textarea>
+    </li>
+    <li class="button">
+      <button type="submit">Send your message</button>
+    </li>
+  </ul>
+</form>
+#+END_SRC
+
+This looks bad. We can add CSS to the form in the html: 
+
+#+BEGIN_SRC html :tangle simple2.html
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>My test page</title>
+    <style>
+      form {
+          /* Center the form on the page */
+          margin: 0 auto;
+          width: 400px;
+          /* Form outline */
+          padding: 1em;
+          border: 1px solid #CCC;
+          border-radius: 1em;
+      }
+
+      ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+      }
+
+      form li + li {
+          margin-top: 1em;
+      }
+
+      label {
+          /* Uniform size & alignment */
+          display: inline-block;
+          width: 90px;
+          text-align: right;
+      }
+
+      input, 
+      textarea {
+          /* To make sure that all text fields have the same font settings
+           By default, textareas have a monospace font */
+          font: 1em sans-serif;
+
+          /* Uniform text field size */
+          width: 300px;
+          box-sizing: border-box;
+
+          /* Match form field borders */
+          border: 1px solid #999;
+      }
+
+      input:focus, 
+      textarea:focus {
+          /* Additional highlight for focused elements */
+          border-color: #000;
+      }
+
+      textarea {
+          /* Align multiline text fields with their labels */
+          vertical-align: top;
+
+          /* Provide space to type some text */
+          height: 5em;
+      }
+
+      .button {
+          /* Align buttons with the text fields */
+          padding-left: 90px; /* same size as the label elements */
+      }
+
+      button {
+          /* This extra margin represent roughly the same space as the space
+           between the labels and their text fields */
+          margin-left: .5em;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="/my-handling-form-page" method="post">
+      <ul>
+        <li>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="user_name">
+        </li>
+        <li>
+          <label for="mail">E-mail:</label>
+          <input type="email" id="mail" name="user_email">
+        </li>
+        <li>
+          <label for="msg">Message:</label>
+          <textarea id="msg" name="user_message"></textarea>
+        </li>
+        <li class="button">
+          <button type="submit">Send your message</button>
+        </li>
+      </ul>
+    </form>
+  </body>
+</html>
+#+END_SRC
+
+*** 0.4: New Note
+
+Create a similar diagram to the example below where the user creates a new note on the notes page by writing something into the text field and clicking the submit button. 
+
+#+BEGIN_SRC text
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+server-->browser: main.js
+
+note over browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+note over browser:
+browser executes the event handler
+that renders notes to display
+end note
+#+END_SRC
+
+With Notes:
+
+#+BEGIN_SRC text
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+server-->browser: main.js
+
+note over browser:
+browser starts executing js-code
+that requests JSON data from server
+end note
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+note over browser:
+browser executes the event handler
+that renders notes to display
+end note
+#+END_SRC
+
