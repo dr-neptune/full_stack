@@ -1,0 +1,17 @@
+* Introduction to React 
+
+** Component
+
+#+BEGIN_SRC javascript :tangle part1/src/index.js
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+const App = () => (
+        <div>
+          <p>Hello World</p>
+        </div>
+)
+
+ReactDOM.render(<App />, document.getElementById('root'))
+#+END_SRC
+
