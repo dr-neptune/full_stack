@@ -121,3 +121,98 @@ const App = () => {
 // run react component named app
 ReactDOM.render(<App />, document.getElementById('root'))
 #+END_SRC
+
+** Exercises 1.1 - 1.2
+** 1.1: Course Information, Step 1
+
+#+BEGIN_SRC sh :dir ~/Documents/exp/full_stack/
+npx create-react-app course-info
+#+END_SRC
+
+#+BEGIN_SRC sh
+cd ~/Documents/exp/full_stack/course-info
+npm start
+#+END_SRC
+
+#+BEGIN_SRC javascript
+import React from "react"
+import ReactDOM from "react-dom"
+
+const App = () => {
+    const course = "Half Stack Application Development"
+    const part1 = "Fundamentals of React"
+    const exercises1 = 10
+    const part2 = "Using Props to Pass Data"
+    const exercises2 = 7
+    const part3 = "State of a Component"
+    const exercises3 = 14
+    
+    return (
+            <div>
+            <h1>{course}</h1>
+            <p>{part1} {exercises1}</p>
+            <p>{part2} {exercises2}</p>
+            <p>{part3} {exercises3}</p>
+            <p>Number of exercises {exercises1 +
+                                    exercises2 +
+                                    exercises3}</p>
+            </div>
+    )
+}
+
+ReactDOM.render(<App />, document.getElementById("root"))
+#+END_SRC
+
+Refactor the code so that it consists of 3 new components: Header, Content, Total. 
+- All data still resides in the App component
+- Header takes care of rendering the name of the course
+- Content renders the parts and their number of exercises
+
+#+BEGIN_SRC javascript :tangle course-info/src/index.js
+import React from "react"
+import ReactDOM from "react-dom"
+
+const Header = (course) => {
+    return (
+            <div>
+            <h1>{course}</h1>
+            </div>
+    )
+}
+
+const Content = (part_name, num_ex) => {
+    return (
+            <p>{part_name} {num_ex}</p>
+    )
+}
+
+const Total = (ex_arr) => {
+    return (
+            <p>{ex_arr.reduce((a, b) => a + b, 0)}</p>
+    )
+}
+
+const App = () => {
+    const course = "Half Stack Application Development"
+    const part1 = "Fundamentals of React"
+    const exercises1 = 10
+    const part2 = "Using Props to Pass Data"
+    const exercises2 = 7
+    const part3 = "State of a Component"
+    const exercises3 = 14
+    
+    return (<>
+            <Header course={course} />
+            <Content part_name={part1} num_ex={exercises1} />
+            <Content part_name={part2} num_ex={exercises2} />
+            <Content part_name={part3} num_ex={exercises3} />
+            <Total ex_arr={[exercises1, exercises2, exercises3]} />
+            </>
+    )
+}
+
+ReactDOM.render(<App />, document.getElementById("root"))
+#+END_SRC
+
+This isn't working. Rework it
+
