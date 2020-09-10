@@ -2,16 +2,122 @@
 
 ** Component
 
+#+BEGIN_SRC javascript
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+const App = () => {
+    const now = new Date()
+    const a = 10
+    const b = 20
+    
+    console.log("Hello from Component")
+    return (
+            <div>
+            <p>Wake up, World! It is {now.toString()}</p>
+            <p>Give peace a chance!</p>
+            <p>{a} plus {b} is {a + b}</p>
+            </div>
+    )
+}
+
+// run react component named app
+ReactDOM.render(<App />, document.getElementById('root'))
+#+END_SRC
+
+** JSX
+
+React components don't return html -- they return JSX. Under the hood JSX returned by React components is compiled into javascript. 
+
+After compiling, our application looks like this:
+
+#+BEGIN_SRC javascript
+import React from "react"
+import ReactDOM from "react-dom"
+
+const App = () => {
+    const now = new Date()
+    const a = 10
+    const b = 20
+
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(
+            "p", null, "Hello world, it is ", now.toString()
+        ),
+        React.createElement(
+            "p", null, a, " plus ", b, " is ", a + b
+        )
+    )
+}
+
+ReactDOM.render(
+    React.createElement(App, null)
+    document.getElementById("root")
+)
+#+END_SRC
+
+** Multiple Components
+
+#+BEGIN_SRC javascript
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+const Hello = () => {
+    return (
+            <div>
+            <p>Hello, world</p>
+            </div>
+    )
+}
+
+const App = () => {
+    return (
+            <div>
+            <h1>Greetings</h1>
+            <Hello />
+            <Hello />
+            <Hello />
+            <Hello />
+            </div>
+    )
+}
+
+// run react component named app
+ReactDOM.render(<App />, document.getElementById('root'))
+#+END_SRC
+
+** props: passing data to components
+
+It is possible to pass data to components using properties: props
+
 #+BEGIN_SRC javascript :tangle part1/src/index.js
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const App = () => (
-        <div>
-          <p>Hello World</p>
-        </div>
-)
+// modify hello component to use props
+const Hello = (props) => {
+    return (
+            <div>
+            <p>Hello {props.name}, you are {props.age} years old</p>
+            </div>
+    )
+}
 
+const App = () => {
+    const name = "Michael"
+    const age = 28
+    
+    return (
+            <div>
+            <h1>Greetings</h1>
+            <Hello name="Michael" age={200 + 20 + 2}/>
+            <Hello name={name} age={age}/>
+            </div>
+    )
+}
+
+// run react component named app
 ReactDOM.render(<App />, document.getElementById('root'))
 #+END_SRC
-
