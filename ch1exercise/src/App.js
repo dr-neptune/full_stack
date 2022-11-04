@@ -16,7 +16,7 @@ const Part = (props) => {
 
 const Content = (props) => {
     return (
-	props.parts.map(item => <Part part={item} />)
+	props.parts.map(item => <Part key={item.id} part={item} />)
     )
 }
 
@@ -35,18 +35,29 @@ const App = () => {
 	parts: [
 	    {
 		name: 'Fundamentals of React',
-		exercises: 10
+		exercises: 10,
+		id: 1
 	    },
 	    {
 		name: 'Using props to pass data',
-		exercises: 7
+		exercises: 7,
+		id: 2
 	    },
 	    {
 		name: 'State of a component',
-		exercises: 14
+		exercises: 14,
+		id: 3
 	    }
 	]
     }
+
+    const arto = {
+	name: 'Arto Hellas',
+	age: 35,
+	education: 'PhD',
+	greet: function() {    console.log('hello, my name is ' + this.name)  },}
+
+    arto.greet()
 
     return (
 	<div>
