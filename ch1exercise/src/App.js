@@ -1,69 +1,25 @@
-const Header = (props) => {
-    return (
-	<>
-	    <h1>{props.course}</h1>
-	</>
-    )
-}
+import { useState } from 'react'
 
-const Part = (props) => {
-    return (
-	<>
-	    <p>{props.part.name}: {props.part.exercises}</p>
-	</>
-    )
-}
+const Display = props => <div>{props.value}</div>
 
-const Content = (props) => {
-    return (
-	props.parts.map(item => <Part key={item.id} part={item} />)
-    )
-}
-
-const Total = (props) => {
-    const overall = props.parts.reduce((a, b) => a + b.exercises, 0)
-    return (
-	<>
-	    <p>Number of exercises: {overall}</p>
-	</>
-    )
-}
+const Button = (props) => (
+    <button onClick={props.handleClick}>{props.text}</button>
+)
 
 const App = () => {
-    const course = {
-	name: 'Half Stack Application Development',
-	parts: [
-	    {
-		name: 'Fundamentals of React',
-		exercises: 10,
-		id: 1
-	    },
-	    {
-		name: 'Using props to pass data',
-		exercises: 7,
-		id: 2
-	    },
-	    {
-		name: 'State of a component',
-		exercises: 14,
-		id: 3
-	    }
-	]
+    const [value, setValue] = useState(10)
+
+    const setToValue = (newValue) => () => {
+	console.log('value now', newValue)
+	setValue(newValue)
     }
-
-    const arto = {
-	name: 'Arto Hellas',
-	age: 35,
-	education: 'PhD',
-	greet: function() {    console.log('hello, my name is ' + this.name)  },}
-
-    arto.greet()
-
+        
     return (
 	<div>
-	    <Header course={course.name} />
-	    <Content parts={course.parts} />
-	    <Total parts={course.parts} />
+	    <Display value={value} />
+	    <Button handleClick={setToValue(1000)} text="Thousand" />
+	    <Button handleClick={setToValue(0)} text="Reset" />
+	    <Button handleClick={setToValue(value + 1)} text="Increment" />
 	</div>
     )
 }
