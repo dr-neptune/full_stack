@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Plot from 'react-plotly.js'
 
 const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 const Anecdote = ({text, votes}) => <><h3>{text}</h3><sub>This anecdote has {votes} votes.</sub></>
@@ -13,10 +14,11 @@ const App = () => {
  	'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
  	'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.'
     ]
-    
+
     const [selected, setSelected] = useState(0)
     const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
-    
+    const xIndex = Array.from(Array(votes.length), (_,x) => x)
+
     const newAnecdote = () => {
  	const newIndex = Math.floor(Math.random() * anecdotes.length)
  	setSelected(newIndex)
@@ -29,7 +31,7 @@ const App = () => {
     }
 
     const arrmax = votes.reduce((idxMax, x, i, arr) => x > arr[idxMax] ? i : idxMax, 0)
-    
+
     return (
  	<div>
 	    <h2>Anecdote of the Day</h2>
@@ -41,6 +43,19 @@ const App = () => {
 	    <hr />
 	    <h2>Anecdote with the Most Votes</h2>
 	    <Anecdote text={anecdotes[arrmax]} votes={votes[arrmax]}/>
+	    <hr />
+	    <Plot data={[
+		{
+		    x: xIndex,
+		    y: votes,
+		    type: 'scatter',
+		    mode: 'lines+markers',
+		    marker: {color: 'red'},
+		},
+		{type: 'bar', x: xIndex, y: votes, marker: {color: 'mediumpurple'}},
+	    ]}
+	layout={ {width: '100%', height: 400, title: 'Distribution of Votes'} }
+	config={{displaylogo: false}}/>
  	</div>
     )
 }
