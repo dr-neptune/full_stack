@@ -1,0 +1,5 @@
+const Content = ({ parts }) => {
+    console.log('hiya buddy')
+}
+
+export default Content
