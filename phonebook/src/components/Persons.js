@@ -1,0 +1,14 @@
+import Name from './Name'
+
+const Persons = (props) => {
+    const names = props.searchTerm === ''
+		? props.persons.map(person => <Name key={person.name} name={person.name} number={person.number} />)
+		: props.persons
+		       .filter(person => person.name.toLowerCase().startsWith(props.searchTerm.toLowerCase()))
+		       .map(person => <Name key={person.name} name={person.name} number={person.number} />)
+    return (
+	<div>{ names }</div>
+    )
+}
+
+export default Persons;

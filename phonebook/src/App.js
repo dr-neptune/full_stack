@@ -1,47 +1,55 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
+import Persons from './components/Persons'
 
-const Name = (props) => {
-    return <p>{ props.text }</p>
-}
 
 const App = () => {
-    const [persons, setPersons] = useState([
-	{ name: 'Arto Hellas' }
-    ])
+    const [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
+    const [newNumber, setNewNumber] = useState('')
+    const [searchTerm, setSearchTerm] = useState('')
 
+    const getData = () => {
+	axios.get('http://localhost:3001/persons')
+	     .then(response => setPersons(response.data))
+    }
+
+    useEffect(getData, [])
+    
     const addName = (event) => {
 	event.preventDefault()
 
-	const nameObject = {
-	    name: newName
+	if (persons.some(name => name.name === newName)) {
+	    alert(`${newName} is already added to the phonebook`)
+	} else {
+	    const nameObject = {
+		name: newName,
+		number: newNumber
+	    }
+
+	    setPersons(persons.concat(nameObject))
+	    setNewName('')
+	    setNewNumber('')
 	}
-
-	setPersons(persons.concat(nameObject))
-	setNewName('')
     }
 
-    const handleNameChange = (event) => {
-	setNewName(event.target.value)
-    }
-
-    const names = persons.map(name => <Name key={name.name} text={name.name} />)
+    const handleNameChange = (event) => setNewName(event.target.value)
+    const handleNumberChange = (event) => setNewNumber(event.target.value)
+    const searchNames = (event) => setSearchTerm(event.target.value)
     
     return (
 	<div>
 	    <h2>Phonebook</h2>
-	    <form>
-		<div>
-		    name: <input value={newName} onChange={handleNameChange} />
-		</div>
-		<div>
-		    <button type="submit" onClick={addName}>add</button>
-		</div>
-	    </form>
+	    <PersonForm name={newName}
+		nameChange={handleNameChange}
+		number={newNumber}
+		numberChange={handleNumberChange}
+		buttonClick={addName} />
 	    <h2>Numbers</h2>
-	    <div>
-		{ names }
-	    </div>
+	    <Filter term={searchTerm} termChange={searchNames} />
+	    <Persons persons={persons} searchTerm={searchTerm} />
 	</div>
     )
 }
