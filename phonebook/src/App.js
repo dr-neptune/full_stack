@@ -3,6 +3,7 @@ import axios from 'axios'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
+import telecom from './services/numbers'
 
 
 const App = () => {
@@ -12,8 +13,8 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState('')
 
     const getData = () => {
-	axios.get('http://localhost:3001/persons')
-	     .then(response => setPersons(response.data))
+	telecom.getAll()
+	       .then(numbers => setPersons(numbers))
     }
 
     useEffect(getData, [])
@@ -22,19 +23,40 @@ const App = () => {
 	event.preventDefault()
 
 	if (persons.some(name => name.name === newName)) {
-	    alert(`${newName} is already added to the phonebook`)
+	    if (window.confirm(`${newName} is already added to the phonebook.
+Replace the number with a new one?`)) {
+
+		const newPerson = {name: newName, number: newNumber, id: newName}
+		
+		telecom.update(newName, newPerson)
+		       .then(response => getData())
+	    }
 	} else {
 	    const nameObject = {
+		id: newName,
 		name: newName,
 		number: newNumber
 	    }
-
-	    setPersons(persons.concat(nameObject))
-	    setNewName('')
-	    setNewNumber('')
+	    
+	    telecom.create(nameObject)
+		   .then(returnedName => {
+		       setPersons(persons.concat(nameObject))
+		       setNewName('')
+		       setNewNumber('')
+		   })
 	}
     }
 
+    const deleteName = (name) => () => {
+	if (window.confirm(`Delete ${name}?`)) {
+	    console.log('boom!')
+	    telecom.deleteItem(name)
+		   .then(response => {
+		       setPersons(persons.filter(person => person.name !== name))
+		   })
+	}
+    }
+    
     const handleNameChange = (event) => setNewName(event.target.value)
     const handleNumberChange = (event) => setNewNumber(event.target.value)
     const searchNames = (event) => setSearchTerm(event.target.value)
@@ -49,7 +71,7 @@ const App = () => {
 		buttonClick={addName} />
 	    <h2>Numbers</h2>
 	    <Filter term={searchTerm} termChange={searchNames} />
-	    <Persons persons={persons} searchTerm={searchTerm} />
+	    <Persons persons={persons} searchTerm={searchTerm} deletePerson={deleteName} />
 	</div>
     )
 }
