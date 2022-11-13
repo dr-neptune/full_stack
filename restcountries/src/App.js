@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Filter from './components/Filter'
 import DisplayCountryInfo from './components/DisplayCountryInfo'
+import Button from './components/Button'
+import TwoCol from './components/TwoCol'
+
 
 const App = () => {    
     const [countries, setCountries] = useState([])
     const [countryNames, setCountryNames] = useState([])
     const [search, setSearch] = useState('')
+    const [countryDisplay, setCountryDisplay] = useState('')
 
     const getAllData = () => {
 	axios.get('https://restcountries.com/v3.1/all')
@@ -41,23 +45,29 @@ const App = () => {
     
     const filterCountries = search === ''
 			  ? []
-    /* : <SearchOption names={ countryNames } searchTerm={search}> */
 			  : countryNames.filter(country => country.toLowerCase().startsWith(search.toLowerCase()))
+
+    const showClick = (name) => () => setCountryDisplay(getCountryInfo(name.countryName))
     
-    const displayInfo = filterCountries.length === 1
-		      ? getCountryInfo(filterCountries[0])
-		      : ''
+    const chooseDisplay = filterCountries.length === 1
+			? getCountryInfo(filterCountries[0])
+			: countryDisplay
+
+    const displayInfo = search === ''
+		      ? ''
+		      : chooseDisplay
     
     const searchCountries = (event) => setSearch(event.target.value)
-
+    
     return (
 	<div>
 	    <h1>Country Information</h1>
 	    <div>
-	    <Filter title='find countries: ' term={search} termChange={searchCountries} />
+		<Filter title='find countries: ' term={search} termChange={searchCountries} />
 	    </div>
 	    <ul>
-		{ filterCountries.map(countryName => <li key={ countryName }>{ countryName }</li>) }
+		{ filterCountries.map(countryName => <TwoCol key={countryName} lhs={ <li key={ countryName }>{ countryName }</li> }
+							     rhs={ <Button handleClick={showClick({ countryName })} text="show" /> } />) }
 		{ displayInfo }
 	    </ul>
 	    <hr />
