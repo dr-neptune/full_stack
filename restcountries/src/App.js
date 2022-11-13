@@ -33,6 +33,7 @@ const App = () => {
 	    languages: Object.values(countryInfo.languages),
 	    flag: countryInfo.flag
 	}
+	
 	return <DisplayCountryInfo name={info.name}
 	                           population={info.population}
 				   capital={info.capital}
