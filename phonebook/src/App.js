@@ -23,8 +23,8 @@ const App = () => {
 	event.preventDefault()
 
 	if (persons.some(name => name.name === newName)) {
-	    if (window.confirm(`${newName} is already added to the phonebook.
-Replace the number with a new one?`)) {
+	    if (window.confirm(`${newName} is already added to the phonebook.` + 
+			       '\nReplace the number with a new one?')) {
 
 		const newPerson = {name: newName, number: newNumber, id: newName}
 		

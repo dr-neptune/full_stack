@@ -11,3 +11,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+h1 {
+    color: rebeccapurple;
+    font-style: italic;
+}
+
+.note {
+    color: #333;
+    padding-top: 3px;
+    font-size: 15px;
+}
+
+.error {
+    color: firebrick;
+    background: lightgrey;
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
