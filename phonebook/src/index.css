@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  margin: 100px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -13,6 +13,79 @@ code {
 }
 
 h2 {
-    color: green;
+    color: rebeccapurple;
     font-style: italic;
+}
+
+h1 {
+    color: mediumpurple;
+    font-style: italic;
+}
+
+.note {
+    color: #333;
+    padding-top: 3px;
+    font-size: 15px;
+}
+
+.notice {
+  position: relative;
+  margin: 1em;
+  background: #F9F9F9;
+  padding: 1em 1em 1em 2em;
+  border-left: 4px solid #DDD;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
+}
+
+.notice:before {
+  position: absolute;
+  top: 50%;
+  margin-top: -17px;
+  left: -17px;
+  background-color: #DDD;
+  color: #FFF;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+  font-family: Georgia;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.info {
+  border-color: #0074D9;
+}
+
+.info:before {
+  content: "i";
+  background-color: #0074D9;
+}
+
+.success {
+  border-color: #2ECC40;
+}
+
+.success:before {
+  content: "√";
+  background-color: #2ECC40;
+}
+
+.warning {
+  border-color: #FFDC00;
+}
+
+.warning:before {
+  content: "!";
+  background-color: #FFDC00;
+}
+
+.error {
+  border-color: #FF4136;
+}
+
+.error:before {
+  content: "X";
+  background-color: #FF4136;
 }

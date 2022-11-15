@@ -3,6 +3,7 @@ import axios from 'axios'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 import telecom from './services/numbers'
 
 
@@ -11,6 +12,7 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [searchTerm, setSearchTerm] = useState('')
+    const [message, setMessage] = useState(null)
 
     const getData = () => {
 	telecom.getAll()
@@ -18,6 +20,14 @@ const App = () => {
     }
 
     useEffect(getData, [])
+    
+    const notificationMessage = (message, notifType) => {
+	if (message === null) {
+	    setMessage(null)
+	} else {
+	    setMessage(<Notification message={message} notifType={notifType} />)
+	}
+    }
     
     const addName = (event) => {
 	event.preventDefault()
@@ -30,6 +40,14 @@ const App = () => {
 		
 		telecom.update(newName, newPerson)
 		       .then(response => getData())
+		       .catch(error => {
+			   notificationMessage(`Person: '${newName}' was already removed from server`,
+					       'notice error')
+			   setPersons(persons.filter(n => n.id !== newName))
+			   setTimeout(() => {
+			       setMessage(null)
+			   }, 5000)
+		       })
 	    }
 	} else {
 	    const nameObject = {
@@ -43,6 +61,11 @@ const App = () => {
 		       setPersons(persons.concat(nameObject))
 		       setNewName('')
 		       setNewNumber('')
+		       notificationMessage(`Person: '${newName}' was added with number: ${newNumber}`,
+					   'notice success')
+		       setTimeout(() => {
+			   setMessage(null)
+		       }, 5000)
 		   })
 	}
     }
@@ -53,6 +76,11 @@ const App = () => {
 	    telecom.deleteItem(name)
 		   .then(response => {
 		       setPersons(persons.filter(person => person.name !== name))
+		       notificationMessage(`Person '${name}' was removed`,
+					   'notice info')
+		       setTimeout(() => {
+			   setMessage(null)
+		       }, 5000)
 		   })
 	}
     }
@@ -64,6 +92,7 @@ const App = () => {
     return (
 	<div>
 	    <h2>Phonebook</h2>
+	    {message}
 	    <PersonForm name={newName}
 		nameChange={handleNameChange}
 		number={newNumber}

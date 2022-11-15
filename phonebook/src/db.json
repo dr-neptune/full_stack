@@ -1,9 +1,9 @@
 {
     "persons":
     [
-	{ "name": "Arto Hellas", "number": "040-1234567" },
-	{ "name": "Bingo Bonanza", "number": "99-8877665" },
-	{ "name": "Thunk Trampoline", "number": "011-9021088" },
-	{ "name": "Clock", "number": "011-2233445" }
+	{ "id": "Arto Hellas", "name": "Arto Hellas", "number": "040-1234567" },
+	{ "id": "Bingo Bonanza", "name": "Bingo Bonanza", "number": "99-8877665" },
+	{ "id": "Thunk Trampoline", "name": "Thunk Trampoline", "number": "011-9021088" },
+	{ "id": "Clock", "name": "Clock", "number": "011-2233445" }
     ]
 }

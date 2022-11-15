@@ -10,7 +10,7 @@ const App = () => {
     const [notes, setNotes] = useState([])
     const [newNote, setNewNote] = useState('')
     const [showAll, setShowAll] = useState(true)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [message, setMessage] = useState(null)
 
     useEffect(() => {
 	noteService
@@ -18,6 +18,14 @@ const App = () => {
 	    .then(initialNotes => setNotes(initialNotes))
     }, [])
 
+    const notificationMessage = (message, notifType) => {
+	if (message === null) {
+	    setMessage(null)
+	} else {
+	    setMessage(<Notification message={message} notifType={notifType} />)
+	}
+    }
+    
     const toggleImportanceOf = id => {
 	const note = notes.find(n => n.id === id)
 	const changedNote = { ...note, important: !note.important }
@@ -26,9 +34,10 @@ const App = () => {
 	    .update(id, changedNote)
 	    .then(returnedNote => setNotes(notes.map(note => note.id !== id ? note : returnedNote)))
 	    .catch(error => {
-		setErrorMessage(`Note '${note.content}' was already removed from server`)
+		notificationMessage(`Note '${note.content}' was already removed from server`,
+				    'notice error')
 		setTimeout(() => {
-		    setErrorMessage(null)
+		    setMessage(null)
 		}, 5000)
 		setNotes(notes.filter(n => n.id !== id))
 	    })
@@ -48,6 +57,8 @@ const App = () => {
 	    .then(returnedNote => {
 		setNotes(notes.concat(returnedNote))
 		setNewNote('')
+		notificationMessage(`Note '${newNote}' was added`,
+				    'notice success')
 	    })
     }
 
@@ -60,7 +71,7 @@ const App = () => {
     return (
 	<div>
 	    <h1>Notes</h1>
-	    <Notification message={errorMessage} />
+	    {message}
 	    <div>
 		<button onClick={() => setShowAll(!showAll)}>
 		    show {showAll ? 'important' : 'all'}

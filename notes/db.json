@@ -59,6 +59,12 @@
       "date": "2022-11-13T22:31:31.205Z",
       "important": true,
       "id": 10
+    },
+    {
+      "content": "here is another note",
+      "date": "2022-11-14T23:42:54.547Z",
+      "important": false,
+      "id": 11
     }
   ]
 }
