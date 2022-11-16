@@ -1,0 +1,37 @@
+GET http://localhost:3001/api/notes/
+
+###
+POST http://localhost:3001/api/notes/
+Content-Type: application/json
+
+{
+    content: "sample post",
+    important: false
+}
+
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "sample post",
+    "important": false
+}
+
+###
+DELETE http://localhost:3001/api/persons/4
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "Thunk Trampoline is the best DnD character ever",
+  "important": false
+}
+
+###
+GET http://localhost:3001/api/yes
+
+###
