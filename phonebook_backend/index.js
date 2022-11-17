@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 
 let persons = [
     { 
@@ -25,16 +26,26 @@ let persons = [
 ]
 
 // middleware
-const requestLogger = (req, res, next) => {
-    console.log('Method:', req.method)
-    console.log('Path:  ', req.path)
-    console.log('Body:  ', req.body)
-    console.log('---')
-    next()
-}
-
 app.use(express.json())
-app.use(requestLogger)
+
+const morganConfig = morgan(function (tokens, req, res) {
+
+    const additionalInfo = 
+	tokens.method(req, res) === 'POST'
+	? JSON.stringify(req.body)
+	: ''
+    
+    return [
+	tokens.method(req, res),
+	tokens.url(req, res),
+	tokens.status(req, res),
+	tokens.res(req, res, 'content-length'), '-',
+	tokens['response-time'](req, res), 'ms',
+	additionalInfo
+    ].join(' ')
+})
+
+app.use(morganConfig)
 
 // base page
 app.get('/', (req, res) => {
