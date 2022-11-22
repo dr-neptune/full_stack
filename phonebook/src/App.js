@@ -73,7 +73,9 @@ const App = () => {
     const deleteName = (name) => () => {
 	if (window.confirm(`Delete ${name}?`)) {
 	    console.log('boom!')
-	    telecom.deleteItem(name)
+	    const toBeDeleted = persons.filter(person => person.name === name)[0].id
+
+	    telecom.deleteItem(toBeDeleted)
 		   .then(response => {
 		       setPersons(persons.filter(person => person.name !== name))
 		       notificationMessage(`Person '${name}' was removed`,
