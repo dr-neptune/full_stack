@@ -32,14 +32,6 @@ const App = () => {
 	noteService
 	    .update(id, changedNote)
 	    .then(returnedNote => setNotes(notes.map(note => note.id !== id ? note : returnedNote)))
-	/* .catch(error => {
-	   notificationMessage(`Note '${note.content}' was already removed from server`,
-	   'notice error')
-	   setTimeout(() => {
-	   setMessage(null)
-	   }, 5000)
-	   setNotes(notes.filter(n => n.id !== id))
-	   }) */
     }
     
     const addNote = event => {

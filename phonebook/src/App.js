@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
@@ -41,11 +40,17 @@ const App = () => {
 		const newPerson = {name: newName, number: newNumber, id: personId}
 		
 		telecom.update(personId, newPerson)
-		       .then(response => getData())
+		       .then(response => {
+			   notificationMessage(`Person: '${newName}' was updated with number: ${newNumber}`,
+					       'notice info')
+			   setTimeout(() => {
+			       setMessage(null)
+			   }, 5000)
+			   getData()
+		       })
 		       .catch(error => {
-			   notificationMessage(`Person: '${newName}' was already removed from server`,
-					       'notice error')
-			   setPersons(persons.filter(n => n.name !== newName))
+			   notificationMessage(error.response.data.error,
+					   'notice error')
 			   setTimeout(() => {
 			       setMessage(null)
 			   }, 5000)
@@ -68,6 +73,14 @@ const App = () => {
 			   setMessage(null)
 		       }, 5000)
 		   })
+		   .catch(error => {
+		       console.log(error.response.data.error)
+		       notificationMessage(error.response.data.error,
+					   'notice error')
+		       setTimeout(() => {
+			   setMessage(null)
+		       }, 5000)
+		   })
 	}
     }
 
@@ -80,7 +93,7 @@ const App = () => {
 		   .then(response => {
 		       setPersons(persons.filter(person => person.id !== toBeDeleted))
 		       notificationMessage(`Person '${name}' was removed`,
-					   'notice info')
+					   'notice warning')
 		       setTimeout(() => {
 			   setMessage(null)
 		       }, 5000)
