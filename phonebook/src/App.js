@@ -36,14 +36,16 @@ const App = () => {
 	    if (window.confirm(`${newName} is already added to the phonebook.` + 
 			       '\nReplace the number with a new one?')) {
 
-		const newPerson = {name: newName, number: newNumber, id: newName}
+		const personId = persons.filter(n => n.name === newName)[0].id
+
+		const newPerson = {name: newName, number: newNumber, id: personId}
 		
-		telecom.update(newName, newPerson)
+		telecom.update(personId, newPerson)
 		       .then(response => getData())
 		       .catch(error => {
 			   notificationMessage(`Person: '${newName}' was already removed from server`,
 					       'notice error')
-			   setPersons(persons.filter(n => n.id !== newName))
+			   setPersons(persons.filter(n => n.name !== newName))
 			   setTimeout(() => {
 			       setMessage(null)
 			   }, 5000)
@@ -51,7 +53,6 @@ const App = () => {
 	    }
 	} else {
 	    const nameObject = {
-		id: newName,
 		name: newName,
 		number: newNumber
 	    }
@@ -74,10 +75,10 @@ const App = () => {
 	if (window.confirm(`Delete ${name}?`)) {
 	    console.log('boom!')
 	    const toBeDeleted = persons.filter(person => person.name === name)[0].id
-
+	    
 	    telecom.deleteItem(toBeDeleted)
 		   .then(response => {
-		       setPersons(persons.filter(person => person.name !== name))
+		       setPersons(persons.filter(person => person.id !== toBeDeleted))
 		       notificationMessage(`Person '${name}' was removed`,
 					   'notice info')
 		       setTimeout(() => {
