@@ -1,5 +1,5 @@
 {
-   "name": "backend",
+   "name": "blog-list",
    "version": "0.0.1",
    "description": "''",
    "main": "index.js",
@@ -7,12 +7,11 @@
       "start": "node index.js",
       "dev": "nodemon index.js",
       "test": "echo \"Error: no test specified\" && exit 1",
-      "build:ui": "rm -rf build && cd ../notes/ && npm run build && cp -r build ../backend",
+      "build:ui": "rm -rf build && cd ../blog_list/ && npm run build && cp -r build ../blog_list_backend",
       "deploy": "git push heroku",
       "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
       "logs:prod": "heroku logs --tail"
    },
-    "proxy": "http://locahost:3001",
    "repository": {
       "type": "git",
       "url": "''"
